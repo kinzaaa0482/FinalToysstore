@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Products – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <h1>🏪 Our Toys</h1>
+
+  <!-- Search & Filter Bar -->
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search toys…" oninput="filterProducts()"/>
+    <div class="select-container" style="flex:0 0 180px">
+      <select id="cat-filter" onchange="filterProducts()">
+        <option value="">All Categories</option>
+        <option value="dolls">Dolls</option>
+        <option value="cars">Cars</option>
+        <option value="teddybears">Teddy Bears</option>
+        <option value="puzzles">Puzzles</option>
+        <option value="kitchen">Kitchen Sets</option>
+      </select>
+    </div>
+    <div class="select-container" style="flex:0 0 180px">
+      <select id="price-filter" onchange="filterProducts()">
+        <option value="9999">Any Price</option>
+        <option value="1000">Under Rs 1,000</option>
+        <option value="2000">Under Rs 2,000</option>
+        <option value="3000">Under Rs 3,000</option>
+        <option value="5000">Under Rs 5,000</option>
+      </select>
+    </div>
+    <div class="select-container" style="flex:0 0 160px">
+      <select id="sort-filter" onchange="sortProducts()">
+        <option value="">Sort By</option>
+        <option value="price-asc">Price: Low→High</option>
+        <option value="price-desc">Price: High→Low</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+    <button onclick="filterProducts()">🔍 Search</button>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="card-container" id="product-grid">
+
+    <!-- DOLLS -->
+
+<div class="card product-card" data-name="barbie fashion doll" data-category="dolls" data-price="2400">
+  <img src="../sources/2.png" alt="Barbie Fashion Doll"/>
+  <h3>Barbie Fashion Doll</h3>
+  <p>Classic Barbie with stylish outfits – ages 3+</p>
+  <h4>Rs 2,400</h4>
+  <span class="badge">Dolls</span>
+  <button onclick="addToCart({
+    id:'d2',
+    name:'Baby Doll Set',
+    price:1800,
+    img:'../sources/2.png'
+  })">
+    Add to Cart
+  </button>
+</div>
+
+<div class="card product-card" data-name="baby doll set" data-category="dolls" data-price="1800">
+  <img src="../sources/1.png" alt="Baby Doll Set"/>
+  <h3>Baby Doll Set</h3>
+  <p>Soft & cuddly baby doll with accessories – ages 2+</p>
+  <h4>Rs 1,800</h4>
+  <span class="badge">Dolls</span>
+  <button onclick="addToCart({
+    id:'d2',
+    name:'Baby Doll Set',
+    price:1800,
+    img:'../sources/1.png'
+  })">
+    Add to Cart
+  </button>
+</div>
+
+    <!-- CARS -->
+    <div class="card product-card" data-name="rc racing car" data-category="cars" data-price="3100">
+      <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400&h=300&fit=crop" alt="RC Racing Car"/>
+      <h3>RC Racing Car</h3>
+      <p>Remote-controlled sports car – ages 5+ – 30 km/h</p>
+      <h4>Rs 3,100</h4>
+      <span class="badge">Cars</span>
+      <button onclick="addToCart({id:'c1',name:'RC Racing Car',price:3100,img:'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <div class="card product-card" data-name="die cast car set" data-category="cars" data-price="1200">
+      <img src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=300&fit=crop" alt="Die-Cast Car Set"/>
+      <h3>Die-Cast Car Set (6pc)</h3>
+      <p>Collectible metal toy cars – ages 3+ – multicolour</p>
+      <h4>Rs 1,200</h4>
+      <span class="badge">Cars</span>
+      <button onclick="addToCart({id:'c2',name:'Die-Cast Car Set',price:1200,img:'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <!-- TEDDY BEARS -->
+    <div class="card product-card" data-name="giant teddy bear" data-category="teddybears" data-price="2800">
+      <img src="https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=400&h=300&fit=crop" alt="Giant Teddy Bear"/>
+      <h3>Giant Teddy Bear</h3>
+      <p>Super soft 90 cm teddy – perfect gift – all ages</p>
+      <h4>Rs 2,800</h4>
+      <span class="badge">Teddy Bears</span>
+      <button onclick="addToCart({id:'t1',name:'Giant Teddy Bear',price:2800,img:'https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <div class="card product-card" data-name="mini teddy bear pack" data-category="teddybears" data-price="900">
+      <img src="https://images.unsplash.com/photo-1530325553241-4f6e7690cf36?w=400&h=300&fit=crop" alt="Mini Teddy Pack"/>
+      <h3>Mini Teddy Pack (3pc)</h3>
+      <p>Set of 3 colourful mini teddies – ages 2+</p>
+      <h4>Rs 900</h4>
+      <span class="badge">Teddy Bears</span>
+      <button onclick="addToCart({id:'t2',name:'Mini Teddy Pack',price:900,img:'https://images.unsplash.com/photo-1530325553241-4f6e7690cf36?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <!-- PUZZLES -->
+    <div class="card product-card" data-name="1000 piece jigsaw puzzle" data-category="puzzles" data-price="950">
+      <img src="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=400&h=300&fit=crop" alt="1000 Piece Puzzle"/>
+      <h3>1000-Piece Jigsaw Puzzle</h3>
+      <p>World map theme – challenging & educational – ages 10+</p>
+      <h4>Rs 950</h4>
+      <span class="badge">Puzzles</span>
+      <button onclick="addToCart({id:'p1',name:'1000-Piece Puzzle',price:950,img:'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <div class="card product-card" data-name="kids puzzle 100 piece" data-category="puzzles" data-price="500">
+      <img src="https://images.unsplash.com/photo-1612532275214-e4ca76d0e4d1?w=400&h=300&fit=crop" alt="Kids Puzzle"/>
+      <h3>Kids Puzzle (100 pcs)</h3>
+      <p>Colourful animal theme – easy grip pieces – ages 4+</p>
+      <h4>Rs 500</h4>
+      <span class="badge">Puzzles</span>
+      <button onclick="addToCart({id:'p2',name:'Kids Puzzle',price:500,img:'https://images.unsplash.com/photo-1612532275214-e4ca76d0e4d1?w=80&h=80&fit=crop'})">Add to Cart</button>
+    </div>
+
+    <!-- KITCHEN SETS -->
+    <div class="card product-card" data-name="deluxe kitchen play set" data-category="kitchen" data-price="4200">
+      <img src="../sources/3.png" alt="Deluxe Kitchen Set"/>
+      <h3>Deluxe Kitchen Play Set</h3>
+      <p>50+ pieces with sounds & lights – ages 3+ – pink</p>
+      <h4>Rs 4,200</h4>
+      <span class="badge">Kitchen</span>
+      <button onclick="addToCart({
+    id:'d2',
+    name:'Kitchen Set',
+    price:4200,
+    img:'../sources/3.png'
+  })">
+    Add to Cart
+  </button>
+
+      
+    </div>
+
+    <div class="card product-card" data-name="mini cooking set" data-category="kitchen" data-price="1600">
+      <img src="../sources/4.png" alt="Mini Cooking Set"/>
+      <h3>Mini Cooking Set</h3>
+      <p>Includes pots, pans & food items – ages 3+</p>
+      <h4>Rs 1,600</h4>
+      <span class="badge">Kitchen</span>
+      <button onclick="addToCart({
+    id:'d2',
+    name:'Kitchen Set',
+    price:4200,
+    img:'../sources/4.png'
+  })">
+    Add to Cart
+  </button>
+     
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div><h1>🧸 ToyStore</h1><p>Pakistan's favourite toy shop online.</p></div>
+    <div><h2>Links</h2><a href="products.html">Shop</a><a href="cart.html">Cart</a><a href="contact.html">Contact</a></div>
+    <div><h2>Categories</h2><a href="#">Dolls</a><a href="#">Cars</a><a href="#">Puzzles</a></div>
+  </div>
+  <p style="text-align:center;margin-top:16px;">© 2025 ToyStore. All rights reserved.</p>
+</footer>
+
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+function sortProducts() {
+  const val = document.getElementById("sort-filter").value;
+  const grid = document.getElementById("product-grid");
+  const cards = Array.from(grid.querySelectorAll(".product-card"));
+  cards.sort((a, b) => {
+    if (val === "price-asc")  return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+    if (val === "price-desc") return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+    if (val === "name")       return a.dataset.name.localeCompare(b.dataset.name);
+    return 0;
+  });
+  cards.forEach(c => grid.appendChild(c));
+}
+// Apply category filter from URL query param
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get("cat");
+  if (cat) {
+    document.getElementById("cat-filter").value = cat;
+    filterProducts();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <div class="form-container">
+    <h1>Create Account</h1>
+    <p>Join ToyStore and start shopping!</p>
+    <form onsubmit="handleSignup(event)">
+      <div>
+        <label>Full Name</label>
+        <input type="text" id="fullname" placeholder="John Doe" required/>
+      </div>
+      <div>
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@email.com" required/>
+      </div>
+      <div>
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="+92 300 0000000"/>
+      </div>
+      <div>
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required/>
+      </div>
+      <div>
+        <label>Confirm Password</label>
+        <input type="password" id="confirm" placeholder="••••••••" required/>
+      </div>
+      <div>
+        <button type="submit">Create Account</button>
+      </div>
+      <p>Already have an account? <a href="login.html" class="link-button">Sign In</a></p>
+    </form>
+  </div>
+</div>
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+function handleSignup(e) {
+  e.preventDefault();
+  const p1 = document.getElementById("password").value;
+  const p2 = document.getElementById("confirm").value;
+  if (p1 !== p2) { alert("Passwords do not match!"); return; }
+  const email = document.getElementById("email").value;
+  localStorage.setItem("ts_user", email);
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

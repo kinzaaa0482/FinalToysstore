@@ -1,0 +1,23 @@
+<nav>
+  <a href="index.html">🧸 ToyStore</a>
+  <ul id="nav-links">
+    <li><a href="products.html">Shop</a></li>
+    <li class="dropdown">
+      <a href="#">Categories ▾</a>
+      <div class="dropdown-menu">
+        <a href="products.html?cat=dolls">Dolls</a>
+        <a href="products.html?cat=cars">Cars</a>
+        <a href="products.html?cat=teddybears">Teddy Bears</a>
+        <a href="products.html?cat=puzzles">Puzzles</a>
+        <a href="products.html?cat=kitchen">Kitchen Sets</a>
+      </div>
+    </li>
+    <li><a href="cart.html">🛒 Cart <span id="cart-count" class="badge">0</span></a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><button onclick="toggleTheme()">🌙</button></li>
+    <li><button onclick="logout()">Logout</button></li>
+  </ul>
+  <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+</nav>
+<script src="../jsFile/jsFunctions.js"></script>

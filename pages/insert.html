@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Insert Stock – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <h1>➕ Insert New Stock</h1>
+  <p>Add a new product to the ToyStore inventory.</p>
+
+  <div class="form-container" style="max-width:600px">
+    <form onsubmit="insertProduct(event)">
+      <div><label>Product Name</label><input type="text" id="pname" placeholder="e.g. Barbie Dream House" required/></div>
+      <div><label>Category</label>
+        <div class="select-container"><select id="pcat">
+          <option value="dolls">Dolls</option>
+          <option value="cars">Cars</option>
+          <option value="teddybears">Teddy Bears</option>
+          <option value="puzzles">Puzzles</option>
+          <option value="kitchen">Kitchen Sets</option>
+        </select></div>
+      </div>
+      <div><label>Price (Rs)</label><input type="number" id="pprice" placeholder="2000" min="1" required/></div>
+      <div><label>Stock Quantity</label><input type="number" id="pqty" placeholder="50" min="1" required/></div>
+      <div><label>Age Range</label><input type="text" id="page" placeholder="e.g. 3+ years"/></div>
+      <div><label>Description</label><textarea id="pdesc" placeholder="Short product description…"></textarea></div>
+      <div><label>Image URL</label><input type="url" id="pimg" placeholder="https://…"/></div>
+      <div style="display:flex;gap:12px">
+        <button type="submit">Add Product</button>
+        <button type="reset" style="background:var(--text-muted-color)">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <h2 style="margin-top:40px">📋 Existing Inventory</h2>
+  <div class="table-container">
+    <table style="min-width:600px;max-width:1100px;">
+      <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+      <tbody id="stock-table">
+        <tr><td>#001</td><td>Barbie Fashion Doll</td><td>Dolls</td><td>Rs 2,400</td><td>80</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c">Del</button></td></tr>
+        <tr><td>#002</td><td>RC Racing Car</td><td>Cars</td><td>Rs 3,100</td><td>65</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c">Del</button></td></tr>
+        <tr><td>#003</td><td>Giant Teddy Bear</td><td>Teddy Bears</td><td>Rs 2,800</td><td>50</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c">Del</button></td></tr>
+        <tr><td>#004</td><td>1000-Piece Puzzle</td><td>Puzzles</td><td>Rs 950</td><td>90</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c">Del</button></td></tr>
+        <tr><td>#005</td><td>Deluxe Kitchen Set</td><td>Kitchen Sets</td><td>Rs 4,200</td><td>45</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c">Del</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<footer>
+  <div class="footer-container">
+    <div><h1>🧸 ToyStore</h1><p>Admin Panel</p></div>
+    <div><h2>Links</h2><a href="dashboard.html">Dashboard</a><a href="products.html">Shop</a></div>
+  </div>
+  <p style="text-align:center;margin-top:16px;">© 2025 ToyStore. All rights reserved.</p>
+</footer>
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+let nextId = 6;
+function insertProduct(e) {
+  e.preventDefault();
+  const name  = document.getElementById("pname").value;
+  const cat   = document.getElementById("pcat").value;
+  const price = document.getElementById("pprice").value;
+  const qty   = document.getElementById("pqty").value;
+  const tbody = document.getElementById("stock-table");
+  const row   = tbody.insertRow();
+  row.innerHTML = `<td>#00${nextId++}</td><td>${name}</td><td>${cat}</td><td>Rs ${parseInt(price).toLocaleString()}</td><td>${qty}</td><td><button style="padding:4px 10px;font-size:0.8rem">Edit</button> <button style="padding:4px 10px;font-size:0.8rem;background:#e74c3c" onclick="this.closest('tr').remove()">Del</button></td>`;
+  alert("Product added: " + name);
+  e.target.reset();
+}
+</script>
+</body>
+</html>

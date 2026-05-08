@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <h1>📊 Admin Dashboard</h1>
+  <p>Welcome back! Here's your store overview.</p>
+
+  <!-- Stat Cards -->
+  <div class="card-container">
+    <div class="stat-card" onclick="location.href='products.html'">
+      <div class="stat-icon">📦</div>
+      <h3>248</h3>
+      <p>Total Products</p>
+    </div>
+    <div class="stat-card" onclick="location.href='products.html'">
+      <div class="stat-icon">🛒</div>
+      <h3>53</h3>
+      <p>Orders Today</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <h3>1,204</h3>
+      <p>Customers</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <h3>Rs 84,200</h3>
+      <p>Revenue (Month)</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⭐</div>
+      <h3>4.8</h3>
+      <p>Avg Rating</p>
+    </div>
+  </div>
+
+  <!-- Action Cards -->
+  <h2>Stock Management</h2>
+  <div class="card-container">
+    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
+      <div style="font-size:2.5rem">👁️</div>
+      <h3>View All Stock</h3>
+      <p>Browse all products in inventory</p>
+      <button>View Stock</button>
+    </div>
+    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='insert.html'">
+      <div style="font-size:2.5rem">➕</div>
+      <h3>Insert New Stock</h3>
+      <p>Add a new toy to the store</p>
+      <button>Add Product</button>
+    </div>
+    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
+      <div style="font-size:2.5rem">✏️</div>
+      <h3>Update Stock</h3>
+      <p>Edit existing product details</p>
+      <button>Update</button>
+    </div>
+    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
+      <div style="font-size:2.5rem">🗑️</div>
+      <h3>Delete Stock</h3>
+      <p>Remove products from inventory</p>
+      <button>Delete</button>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <h2>📈 Sales by Category</h2>
+  <div class="chart-container">
+    <canvas id="salesChart" width="700" height="300"></canvas>
+  </div>
+
+  <h2>📦 Stock Levels</h2>
+  <div class="chart-container">
+    <canvas id="stockChart" width="700" height="280"></canvas>
+  </div>
+
+  <!-- Recent Orders Table -->
+  <h2>🛍️ Recent Orders</h2>
+  <div class="table-container">
+    <table style="min-width:500px;max-width:900px;">
+      <thead>
+        <tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>#1021</td><td>Ali Raza</td><td>Barbie Doll Set</td><td>Rs 2,400</td><td><span class="badge">Delivered</span></td></tr>
+        <tr><td>#1022</td><td>Sara Khan</td><td>RC Racing Car</td><td>Rs 3,100</td><td><span class="badge">Processing</span></td></tr>
+        <tr><td>#1023</td><td>Usman Ahmed</td><td>Teddy Bear XL</td><td>Rs 1,800</td><td><span class="badge">Delivered</span></td></tr>
+        <tr><td>#1024</td><td>Fatima Malik</td><td>Puzzle 1000 pcs</td><td>Rs 950</td><td><span class="badge">Shipped</span></td></tr>
+        <tr><td>#1025</td><td>Hassan Ali</td><td>Kitchen Play Set</td><td>Rs 2,200</td><td><span class="badge">Processing</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Quick Links -->
+  <h2>⚡ Quick Links</h2>
+  <div class="card-container">
+    <a href="contact.html" class="link-button">📧 Contact Support</a>
+    <a href="cart.html" class="link-button">🛒 View Cart</a>
+    <a href="products.html" class="link-button">🏪 Browse Store</a>
+    <a href="insert.html" class="link-button">📋 Manage Stock</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div><h1>🧸 ToyStore</h1><p>Pakistan's favourite toy shop online.</p></div>
+    <div><h2>Links</h2><a href="products.html">Shop</a><a href="cart.html">Cart</a><a href="contact.html">Contact</a></div>
+    <div><h2>Categories</h2><a href="products.html?cat=dolls">Dolls</a><a href="products.html?cat=cars">Cars</a><a href="products.html?cat=puzzles">Puzzles</a></div>
+  </div>
+  <p style="text-align:center;margin-top:16px;">© 2025 ToyStore. All rights reserved.</p>
+</footer>
+
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  drawBarChart("salesChart", ["Dolls","Cars","Teddy","Puzzles","Kitchen"], [42,31,27,18,22], "Monthly Sales by Category");
+  drawBarChart("stockChart", ["Dolls","Cars","Teddy","Puzzles","Kitchen"], [80,65,50,90,45], "Current Stock Levels");
+});
+</script>
+</body>
+</html>

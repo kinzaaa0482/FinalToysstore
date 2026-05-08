@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <div class="form-container">
+    <h1>Welcome Back!</h1>
+    <p>Sign in to your ToyStore account</p>
+    <form onsubmit="handleLogin(event)">
+      <div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@email.com" required/>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required/>
+      </div>
+      <div>
+        <button type="submit">Sign In</button>
+      </div>
+      <p>Don't have an account? <a href="signup.html" class="link-button">Register</a></p>
+    </form>
+  </div>
+</div>
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  localStorage.setItem("ts_user", email);
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – ToyStore</title>
+  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+</head>
+<body>
+<div id="navbar-placeholder" data-depth="../"></div>
+<div class="page">
+  <h1>📬 Contact Us</h1>
+  <p>We'd love to hear from you. Fill in the form below and we'll respond within 24 hours.</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;justify-content:center">
+    <div class="form-container" style="flex:1;min-width:300px;max-width:480px">
+      <h2>Send a Message</h2>
+      <form onsubmit="submitContact(event)">
+        <div><label>Full Name</label><input type="text" placeholder="Your name" required/></div>
+        <div><label>Email</label><input type="email" placeholder="you@email.com" required/></div>
+        <div><label>Subject</label>
+          <div class="select-container"><select><option>General Inquiry</option><option>Order Issue</option><option>Return/Refund</option><option>Bulk Order</option></select></div>
+        </div>
+        <div><label>Message</label><textarea placeholder="Write your message here…" required></textarea></div>
+        <div><button type="submit">Send Message</button></div>
+      </form>
+    </div>
+
+    <div style="flex:1;min-width:260px;max-width:360px">
+      <div class="card" style="padding:24px;margin-bottom:16px;width:auto">
+        <div style="font-size:2rem">📍</div>
+        <h3>Address</h3>
+        <p>Shop #5, Toy Market, GT Road, Gujranwala, Punjab, Pakistan</p>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:16px;width:auto">
+        <div style="font-size:2rem">📞</div>
+        <h3>Phone</h3>
+        <p>+92 300 1234567</p>
+      </div>
+      <div class="card" style="padding:24px;width:auto">
+        <div style="font-size:2rem">📧</div>
+        <h3>Email</h3>
+        <p>support@toystore.pk</p>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-container">
+    <div><h1>🧸 ToyStore</h1><p>Pakistan's favourite toy shop online.</p></div>
+    <div><h2>Links</h2><a href="products.html">Shop</a><a href="cart.html">Cart</a></div>
+    <div><h2>Contact</h2><p>support@toystore.pk</p><p>+92 300 1234567</p></div>
+  </div>
+  <p style="text-align:center;margin-top:16px;">© 2025 ToyStore. All rights reserved.</p>
+</footer>
+<script src="../jsFile/jsFunctions.js"></script>
+<script>
+function submitContact(e) { e.preventDefault(); alert("Thank you! Your message has been sent. We'll reply shortly."); e.target.reset(); }
+</script>
+</body>
+</html>
