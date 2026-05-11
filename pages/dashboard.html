@@ -1,127 +1,1258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard – ToyStore</title>
-  <link rel="stylesheet" href="../cssFile/globalStyles.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard — ToyStore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+ 
+/* ── LIGHT MODE (default) ── */
+:root,[data-theme="light"]{
+  --bg:#f0f2f7;
+  --bg2:#ffffff;
+  --bg3:#f5f7fb;
+  --border:#e2e6f0;
+  --border2:#ccd2e0;
+  --text:#1a2035;
+  --muted:#7a869a;
+  --accent:#6c63ff;
+  --accent2:#4f46e5;
+  --green:#16a34a;
+  --yellow:#d97706;
+  --red:#dc2626;
+  --blue:#2563eb;
+  --cyan:#0891b2;
+  --pink:#db2777;
+  --orange:#ea580c;
+  --radius:12px;
+  --sidebar-w:240px;
+  --font:'Inter',system-ui,sans-serif;
+  --shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --shadow-hover:0 8px 32px rgba(0,0,0,.12);
+}
+ 
+/* ── DARK MODE ── */
+[data-theme="dark"]{
+  --bg:#0f1117;
+  --bg2:#161b27;
+  --bg3:#1e2536;
+  --border:#2a3245;
+  --border2:#323d56;
+  --text:#e8eaf0;
+  --muted:#7a869a;
+  --accent:#6c63ff;
+  --accent2:#4f46e5;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --red:#ef4444;
+  --blue:#3b82f6;
+  --cyan:#06b6d4;
+  --pink:#ec4899;
+  --orange:#f97316;
+  --shadow:0 1px 4px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.4);
+  --shadow-hover:0 8px 32px rgba(0,0,0,.5);
+}
+ 
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;transition:background .25s,color .25s}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+canvas{display:block}
+ 
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+ 
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  transition:width .25s ease, background .25s, border-color .25s;
+  position:relative;z-index:10;
+  box-shadow:var(--shadow);
+}
+.sidebar.collapsed{width:64px}
+.sidebar-top{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 16px 16px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.logo-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.logo-text{overflow:hidden;white-space:nowrap}
+.logo-text h1{font-size:.95rem;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.logo-text p{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.sidebar.collapsed .logo-text{display:none}
+ 
+.sidebar-collapse{
+  position:absolute;top:22px;right:-12px;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--muted);cursor:pointer;
+  transition:all .2s;
+}
+.sidebar-collapse:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+ 
+.nav-group{padding:8px 0}
+.nav-label{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--muted);
+  padding:10px 20px 4px;white-space:nowrap;overflow:hidden;
+}
+.sidebar.collapsed .nav-label{opacity:0;pointer-events:none}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;color:var(--muted);
+  font-size:.84rem;font-weight:500;
+  border-left:3px solid transparent;
+  transition:all .18s;cursor:pointer;white-space:nowrap;
+  border-right:none;border-top:none;border-bottom:none;
+  background:none;width:100%;text-align:left;
+}
+.nav-item:hover{color:var(--text);background:rgba(108,99,255,.07)}
+.nav-item.active{color:var(--accent);background:rgba(108,99,255,.1);border-left-color:var(--accent)}
+[data-theme="dark"] .nav-item.active{color:#fff;background:rgba(108,99,255,.15)}
+.nav-icon{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;background:rgba(0,0,0,.05);
+  transition:background .18s;
+}
+[data-theme="dark"] .nav-icon{background:rgba(255,255,255,.05)}
+.nav-item.active .nav-icon{background:rgba(108,99,255,.15)}
+.nav-item-text{overflow:hidden;white-space:nowrap}
+.sidebar.collapsed .nav-item-text{display:none}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;
+  font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:20px;
+  flex-shrink:0;
+}
+.sidebar.collapsed .nav-badge{display:none}
+ 
+.sidebar-footer{
+  margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);
+}
+.user-chip{
+  display:flex;align-items:center;gap:10px;
+  padding:8px;border-radius:10px;cursor:pointer;
+  transition:background .18s;
+}
+.user-chip:hover{background:rgba(0,0,0,.05)}
+[data-theme="dark"] .user-chip:hover{background:rgba(255,255,255,.05)}
+.user-av{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;color:#fff;
+}
+.user-info{overflow:hidden;}
+.user-name{font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap}
+.user-role{font-size:.65rem;color:var(--muted);white-space:nowrap}
+.sidebar.collapsed .user-info{display:none}
+ 
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+ 
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:0 24px;height:60px;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  flex-shrink:0;transition:background .25s,border-color .25s;
+  box-shadow:var(--shadow);
+}
+.topbar-title{flex:1}
+.topbar-title h2{font-size:1.05rem;font-weight:700;color:var(--text)}
+.topbar-title p{font-size:.75rem;color:var(--muted);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.tb-btn{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--bg3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--muted);cursor:pointer;
+  transition:all .18s;position:relative;
+}
+.tb-btn:hover{background:var(--bg);color:var(--text);border-color:var(--border2)}
+.notif-dot{
+  position:absolute;top:6px;right:6px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--red);border:2px solid var(--bg2);
+}
+.tb-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:0 12px;height:36px;
+  transition:border .18s;
+}
+.tb-search:focus-within{border-color:var(--accent)}
+.tb-search input{
+  background:none;border:none;outline:none;
+  color:var(--text);font-size:.84rem;width:160px;
+}
+.tb-search input::placeholder{color:var(--muted)}
+.tb-search span{color:var(--muted);font-size:13px}
+ 
+/* theme toggle btn */
+#theme-toggle{font-size:17px;transition:transform .3s}
+#theme-toggle:hover{transform:rotate(20deg)}
+ 
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:24px;background:var(--bg);transition:background .25s}
+ 
+.dash-section{display:none}
+.dash-section.active{display:block}
+ 
+/* ── KPI CARDS ── */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;margin-bottom:20px;
+}
+.kpi-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  position:relative;overflow:hidden;
+  transition:transform .2s,box-shadow .2s,background .25s,border-color .25s;
+  box-shadow:var(--shadow);
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.kpi-card.kpi-purple::before{background:linear-gradient(90deg,var(--accent),var(--pink))}
+.kpi-card.kpi-green::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.kpi-card.kpi-orange::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
+.kpi-card.kpi-blue::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.kpi-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.kpi-purple .kpi-icon{background:rgba(108,99,255,.12)}
+.kpi-green .kpi-icon{background:rgba(34,197,94,.12)}
+.kpi-orange .kpi-icon{background:rgba(249,115,22,.12)}
+.kpi-blue .kpi-icon{background:rgba(59,130,246,.12)}
+.kpi-trend{
+  display:flex;align-items:center;gap:4px;
+  font-size:.72rem;font-weight:700;padding:3px 8px;
+  border-radius:20px;
+}
+.trend-up{background:rgba(22,163,74,.12);color:var(--green)}
+.trend-down{background:rgba(220,38,38,.1);color:var(--red)}
+[data-theme="dark"] .trend-up{background:rgba(34,197,94,.12)}
+[data-theme="dark"] .trend-down{background:rgba(239,68,68,.12)}
+.kpi-val{font-size:1.75rem;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1}
+.kpi-label{font-size:.75rem;color:var(--muted);margin-top:4px}
+.kpi-spark{margin-top:14px;height:36px;position:relative}
+canvas.spark{width:100%!important;height:36px!important}
+ 
+/* ── CHARTS ROW ── */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px}
+.chart-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);transition:background .25s,border-color .25s;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-head h3{font-size:.9rem;font-weight:700;color:var(--text)}
+.card-head-right{display:flex;align-items:center;gap:8px}
+.chip{
+  font-size:.7rem;font-weight:600;padding:4px 10px;
+  border-radius:20px;cursor:pointer;transition:all .18s;
+  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+}
+.chip.active{background:rgba(108,99,255,.12);border-color:var(--accent);color:var(--accent)}
+.chart-canvas-wrap{position:relative}
+ 
+/* ── DONUT LEGEND ── */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+.donut-center-wrap{position:relative;width:160px;height:160px}
+.donut-center-wrap canvas{width:160px!important;height:160px!important}
+.donut-center{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none;
+}
+.donut-center span:first-child{font-size:1.4rem;font-weight:800;color:var(--text)}
+.donut-center span:last-child{font-size:.65rem;color:var(--muted);margin-top:2px}
+.donut-legend{width:100%;display:flex;flex-direction:column;gap:8px}
+.dl-item{display:flex;align-items:center;gap:8px}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dl-label{flex:1;font-size:.78rem;color:var(--muted)}
+.dl-val{font-size:.78rem;font-weight:700;color:var(--text)}
+.dl-pct{font-size:.7rem;color:var(--muted);margin-left:4px}
+ 
+/* ── MID ROW ── */
+.mid-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+ 
+/* ── TABLE CARD ── */
+.table-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  margin-bottom:20px;box-shadow:var(--shadow);
+  transition:background .25s,border-color .25s;
+}
+.table-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+}
+.table-head h3{font-size:.9rem;font-weight:700;color:var(--text)}
+.table-actions{display:flex;align-items:center;gap:8px}
+.search-mini{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:0 10px;height:32px;
+}
+.search-mini input{
+  background:none;border:none;outline:none;
+  color:var(--text);font-size:.8rem;width:130px;
+}
+.search-mini input::placeholder{color:var(--muted)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:8px;
+  padding:0 14px;height:32px;font-size:.78rem;
+  font-weight:600;transition:opacity .18s;white-space:nowrap;
+}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--muted);border-radius:8px;
+  padding:0 12px;height:32px;font-size:.78rem;font-weight:600;
+  transition:all .18s;white-space:nowrap;
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.adv-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.adv-table th{
+  background:rgba(0,0,0,.025);
+  color:var(--muted);font-weight:600;
+  padding:10px 20px;text-align:left;
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;
+  border-bottom:1px solid var(--border);
+}
+[data-theme="dark"] .adv-table th{background:rgba(255,255,255,.025)}
+.adv-table td{
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  color:var(--text);vertical-align:middle;
+}
+.adv-table tbody tr:last-child td{border-bottom:none}
+.adv-table tbody tr{transition:background .15s;cursor:pointer}
+.adv-table tbody tr:hover{background:rgba(108,99,255,.04)}
+[data-theme="dark"] .adv-table tbody tr:hover{background:rgba(255,255,255,.025)}
+.prod-cell{display:flex;align-items:center;gap:10px}
+.prod-av{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.prod-name{font-weight:600;color:var(--text);font-size:.83rem}
+.prod-cat{font-size:.7rem;color:var(--muted);margin-top:1px}
+ 
+/* ── BADGES ── */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:20px;
+  font-size:.7rem;font-weight:700;
+}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-green{background:rgba(22,163,74,.1);color:var(--green)}
+.badge-yellow{background:rgba(217,119,6,.1);color:var(--yellow)}
+.badge-red{background:rgba(220,38,38,.1);color:var(--red)}
+.badge-blue{background:rgba(37,99,235,.1);color:var(--blue)}
+.badge-purple{background:rgba(108,99,255,.1);color:var(--accent)}
+.badge-cyan{background:rgba(8,145,178,.1);color:var(--cyan)}
+[data-theme="dark"] .badge-green{background:rgba(34,197,94,.12)}
+[data-theme="dark"] .badge-yellow{background:rgba(245,158,11,.12)}
+[data-theme="dark"] .badge-red{background:rgba(239,68,68,.12)}
+[data-theme="dark"] .badge-blue{background:rgba(59,130,246,.12)}
+[data-theme="dark"] .badge-cyan{background:rgba(6,182,212,.12)}
+ 
+/* ── STOCK BAR ── */
+.stock-bar-wrap{width:100%;display:flex;align-items:center;gap:8px}
+.stock-bar-bg{flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.stock-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.stock-bar-label{font-size:.75rem;font-weight:700;color:var(--text);white-space:nowrap;min-width:28px;text-align:right}
+ 
+/* ── ACTION BTNS ── */
+.row-actions{display:flex;gap:6px}
+.act-btn{
+  padding:4px 10px;border-radius:6px;font-size:.72rem;
+  font-weight:600;border:none;cursor:pointer;transition:all .15s;
+}
+.act-edit{background:rgba(108,99,255,.1);color:var(--accent)}
+.act-edit:hover{background:rgba(108,99,255,.2)}
+.act-del{background:rgba(220,38,38,.07);color:var(--red)}
+.act-del:hover{background:rgba(220,38,38,.15)}
+[data-theme="dark"] .act-del{background:rgba(239,68,68,.08)}
+[data-theme="dark"] .act-del:hover{background:rgba(239,68,68,.2)}
+ 
+/* ── MINI PANELS ── */
+.mini-panel{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);transition:background .25s,border-color .25s;
+}
+.activity-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.activity-item:last-child{border-bottom:none}
+.act-av{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:#fff;
+}
+.act-text{flex:1}
+.act-title{font-size:.8rem;font-weight:600;color:var(--text)}
+.act-sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+.act-time{font-size:.68rem;color:var(--muted);white-space:nowrap;margin-top:2px}
+ 
+.alert-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:9px;
+  border:1px solid;margin-bottom:8px;
+}
+.alert-row:last-child{margin-bottom:0}
+.alert-row.warn{background:rgba(217,119,6,.06);border-color:rgba(217,119,6,.2)}
+.alert-row.danger{background:rgba(220,38,38,.05);border-color:rgba(220,38,38,.18)}
+[data-theme="dark"] .alert-row.warn{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2)}
+[data-theme="dark"] .alert-row.danger{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2)}
+.alert-ic{font-size:16px;flex-shrink:0}
+.alert-info{flex:1}
+.alert-info strong{display:block;font-size:.8rem;color:var(--text)}
+.alert-info span{font-size:.7rem;color:var(--muted)}
+.restock-btn{
+  font-size:.68rem;font-weight:700;padding:4px 8px;
+  border-radius:6px;border:none;cursor:pointer;white-space:nowrap;
+}
+.warn .restock-btn{background:rgba(217,119,6,.12);color:var(--yellow)}
+.danger .restock-btn{background:rgba(220,38,38,.1);color:var(--red)}
+[data-theme="dark"] .warn .restock-btn{background:rgba(245,158,11,.15)}
+[data-theme="dark"] .danger .restock-btn{background:rgba(239,68,68,.12)}
+ 
+/* ── QUICK STATS ROW ── */
+.qstat{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 18px;
+  display:flex;flex-direction:column;gap:4px;
+  transition:background .25s,border-color .25s;
+}
+.qstat-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.qstat-val{font-size:1.2rem;font-weight:800;color:var(--text)}
+.qstat-sub{font-size:.7rem;color:var(--muted)}
+ 
+/* ── MODAL ── */
+.modal-backdrop{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(4px);
+  z-index:1000;align-items:center;justify-content:center;
+}
+[data-theme="dark"] .modal-backdrop{background:rgba(0,0,0,.6)}
+.modal-backdrop.open{display:flex}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:28px;width:440px;max-width:95vw;
+  box-shadow:0 24px 80px rgba(0,0,0,.15);
+  animation:slideUp .2s ease;transition:background .25s,border-color .25s;
+}
+[data-theme="dark"] .modal{box-shadow:0 24px 80px rgba(0,0,0,.5)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-hd h3{font-size:1rem;font-weight:700;color:var(--text)}
+.modal-close-btn{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--muted);width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;line-height:1;transition:all .15s;
+}
+.modal-close-btn:hover{background:rgba(220,38,38,.1);color:var(--red);border-color:transparent}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.form-row input,.form-row select{
+  width:100%;padding:10px 14px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:9px;
+  color:var(--text);font-size:.875rem;outline:none;
+  transition:border .18s;font-family:var(--font);
+}
+.form-row input:focus,.form-row select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.12)}
+.form-row select option{background:var(--bg2)}
+.form-row input::placeholder{color:var(--muted)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.btn-modal-cancel{
+  flex:1;padding:10px;background:var(--bg3);
+  border:1px solid var(--border);color:var(--muted);
+  border-radius:9px;font-weight:600;font-size:.875rem;transition:all .18s;
+}
+.btn-modal-cancel:hover{color:var(--text);border-color:var(--border2)}
+.btn-modal-submit{
+  flex:1.5;padding:10px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border-radius:9px;font-weight:700;font-size:.875rem;
+  transition:opacity .18s;
+}
+.btn-modal-submit:hover{opacity:.85}
+ 
+/* ── ORDERS TABLE ── */
+.order-av{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.order-cell{display:flex;align-items:center;gap:9px}
+.order-name{font-weight:600;color:var(--text);font-size:.82rem}
+.order-id{font-size:.7rem;color:var(--muted)}
+ 
+/* ── ANALYTICS PAGE ── */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.analytics-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+ 
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+ 
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.charts-row{grid-template-columns:1fr}.mid-row{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.mid-row{grid-template-columns:1fr}.sidebar{width:64px}.sidebar .logo-text,.sidebar .nav-item-text,.sidebar .nav-badge,.sidebar .user-info,.sidebar .nav-label{display:none}.topbar{padding:0 14px}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div id="navbar-placeholder" data-depth="../"></div>
-<div class="page">
-  <h1>📊 Admin Dashboard</h1>
-  <p>Welcome back! Here's your store overview.</p>
-
-  <!-- Stat Cards -->
-  <div class="card-container">
-    <div class="stat-card" onclick="location.href='products.html'">
-      <div class="stat-icon">📦</div>
-      <h3>248</h3>
-      <p>Total Products</p>
-    </div>
-    <div class="stat-card" onclick="location.href='products.html'">
-      <div class="stat-icon">🛒</div>
-      <h3>53</h3>
-      <p>Orders Today</p>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">👥</div>
-      <h3>1,204</h3>
-      <p>Customers</p>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <h3>Rs 84,200</h3>
-      <p>Revenue (Month)</p>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">⭐</div>
-      <h3>4.8</h3>
-      <p>Avg Rating</p>
+<div class="app">
+ 
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <div class="logo-icon">🧸</div>
+    <div class="logo-text">
+      <h1>ToyStore</h1>
+      <p>Admin Panel</p>
     </div>
   </div>
-
-  <!-- Action Cards -->
-  <h2>Stock Management</h2>
-  <div class="card-container">
-    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
-      <div style="font-size:2.5rem">👁️</div>
-      <h3>View All Stock</h3>
-      <p>Browse all products in inventory</p>
-      <button>View Stock</button>
-    </div>
-    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='insert.html'">
-      <div style="font-size:2.5rem">➕</div>
-      <h3>Insert New Stock</h3>
-      <p>Add a new toy to the store</p>
-      <button>Add Product</button>
-    </div>
-    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
-      <div style="font-size:2.5rem">✏️</div>
-      <h3>Update Stock</h3>
-      <p>Edit existing product details</p>
-      <button>Update</button>
-    </div>
-    <div class="card" style="align-items:center;padding:24px;cursor:pointer;" onclick="location.href='products.html'">
-      <div style="font-size:2.5rem">🗑️</div>
-      <h3>Delete Stock</h3>
-      <p>Remove products from inventory</p>
-      <button>Delete</button>
+  <button class="sidebar-collapse" onclick="toggleSidebar()" title="Collapse">◀</button>
+ 
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <button class="nav-item active" data-sec="overview" onclick="nav(this)">
+      <span class="nav-icon">📊</span><span class="nav-item-text">Overview</span>
+    </button>
+    <button class="nav-item" data-sec="analytics" onclick="nav(this)">
+      <span class="nav-icon">📈</span><span class="nav-item-text">Analytics</span>
+    </button>
+    <button class="nav-item" data-sec="orders" onclick="nav(this)">
+      <span class="nav-icon">🛍️</span><span class="nav-item-text">Orders</span>
+      <span class="nav-badge">7</span>
+    </button>
+  </div>
+ 
+  <div class="nav-group">
+    <div class="nav-label">Inventory</div>
+    <button class="nav-item" data-sec="stock" onclick="nav(this)">
+      <span class="nav-icon">📦</span><span class="nav-item-text">Stock Manager</span>
+    </button>
+    <button class="nav-item" onclick="openModal()">
+      <span class="nav-icon">➕</span><span class="nav-item-text">Add Product</span>
+    </button>
+    <button class="nav-item" onclick="exportCSV()">
+      <span class="nav-icon">📤</span><span class="nav-item-text">Export CSV</span>
+    </button>
+  </div>
+ 
+  <div class="nav-group">
+    <div class="nav-label">Store</div>
+    <button class="nav-item" onclick="location.href='products.html'">
+      <span class="nav-icon">🏪</span><span class="nav-item-text">View Shop</span>
+    </button>
+    <button class="nav-item" onclick="location.href='cart.html'">
+      <span class="nav-icon">🛒</span><span class="nav-item-text">Cart</span>
+    </button>
+    <button class="nav-item" onclick="location.href='contact.html'">
+      <span class="nav-icon">📧</span><span class="nav-item-text">Contact</span>
+    </button>
+    <button class="nav-item" onclick="location.href='../index.html'">
+      <span class="nav-icon">🏠</span><span class="nav-item-text">Home</span>
+    </button>
+  </div>
+ 
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-av">AD</div>
+      <div class="user-info">
+        <div class="user-name">Admin</div>
+        <div class="user-role">Store Manager</div>
+      </div>
     </div>
   </div>
-
-  <!-- Charts -->
-  <h2>📈 Sales by Category</h2>
-  <div class="chart-container">
-    <canvas id="salesChart" width="700" height="300"></canvas>
+</aside>
+ 
+<!-- ══════════ MAIN ══════════ -->
+<div class="main">
+ 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title">
+      <h2 id="topbar-title">Overview</h2>
+      <p id="topbar-sub">Sunday, 10 May 2026 · ToyStore Admin</p>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Search anything…" oninput="globalSearch(this.value)"/>
+      </div>
+      <div class="tb-btn" title="Notifications">
+        🔔<span class="notif-dot"></span>
+      </div>
+      <div class="tb-btn" title="Settings">⚙️</div>
+      <div class="tb-btn" id="theme-toggle" title="Toggle dark/light mode" onclick="toggleTheme()">🌙</div>
+    </div>
   </div>
-
-  <h2>📦 Stock Levels</h2>
-  <div class="chart-container">
-    <canvas id="stockChart" width="700" height="280"></canvas>
-  </div>
-
-  <!-- Recent Orders Table -->
-  <h2>🛍️ Recent Orders</h2>
-  <div class="table-container">
-    <table style="min-width:500px;max-width:900px;">
-      <thead>
-        <tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>#1021</td><td>Ali Raza</td><td>Barbie Doll Set</td><td>Rs 2,400</td><td><span class="badge">Delivered</span></td></tr>
-        <tr><td>#1022</td><td>Sara Khan</td><td>RC Racing Car</td><td>Rs 3,100</td><td><span class="badge">Processing</span></td></tr>
-        <tr><td>#1023</td><td>Usman Ahmed</td><td>Teddy Bear XL</td><td>Rs 1,800</td><td><span class="badge">Delivered</span></td></tr>
-        <tr><td>#1024</td><td>Fatima Malik</td><td>Puzzle 1000 pcs</td><td>Rs 950</td><td><span class="badge">Shipped</span></td></tr>
-        <tr><td>#1025</td><td>Hassan Ali</td><td>Kitchen Play Set</td><td>Rs 2,200</td><td><span class="badge">Processing</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Quick Links -->
-  <h2>⚡ Quick Links</h2>
-  <div class="card-container">
-    <a href="contact.html" class="link-button">📧 Contact Support</a>
-    <a href="cart.html" class="link-button">🛒 View Cart</a>
-    <a href="products.html" class="link-button">🏪 Browse Store</a>
-    <a href="insert.html" class="link-button">📋 Manage Stock</a>
+ 
+  <!-- CONTENT -->
+  <div class="content">
+ 
+    <!-- ══ OVERVIEW ══ -->
+    <div class="dash-section active" id="sec-overview">
+ 
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-purple">
+          <div class="kpi-top">
+            <div class="kpi-icon">📦</div>
+            <span class="kpi-trend trend-up">▲ 12%</span>
+          </div>
+          <div class="kpi-val">248</div>
+          <div class="kpi-label">Total Products</div>
+          <div class="kpi-spark"><canvas class="spark" id="sp1"></canvas></div>
+        </div>
+        <div class="kpi-card kpi-green">
+          <div class="kpi-top">
+            <div class="kpi-icon">🛍️</div>
+            <span class="kpi-trend trend-up">▲ 8%</span>
+          </div>
+          <div class="kpi-val">53</div>
+          <div class="kpi-label">Orders Today</div>
+          <div class="kpi-spark"><canvas class="spark" id="sp2"></canvas></div>
+        </div>
+        <div class="kpi-card kpi-orange">
+          <div class="kpi-top">
+            <div class="kpi-icon">👥</div>
+            <span class="kpi-trend trend-up">▲ 5%</span>
+          </div>
+          <div class="kpi-val">1,204</div>
+          <div class="kpi-label">Customers</div>
+          <div class="kpi-spark"><canvas class="spark" id="sp3"></canvas></div>
+        </div>
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-top">
+            <div class="kpi-icon">💰</div>
+            <span class="kpi-trend trend-down">▼ 3%</span>
+          </div>
+          <div class="kpi-val">Rs 84.2K</div>
+          <div class="kpi-label">Revenue (Month)</div>
+          <div class="kpi-spark"><canvas class="spark" id="sp4"></canvas></div>
+        </div>
+      </div>
+ 
+      <!-- Charts Row -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="card-head">
+            <h3>Revenue Overview</h3>
+            <div class="card-head-right">
+              <span class="chip active" onclick="switchChip(this,'revenue')">Monthly</span>
+              <span class="chip" onclick="switchChip(this,'revenue')">Weekly</span>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:220px">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="card-head"><h3>Category Split</h3></div>
+          <div class="donut-wrap">
+            <div class="donut-center-wrap">
+              <canvas id="donutChart"></canvas>
+              <div class="donut-center">
+                <span>248</span>
+                <span>Products</span>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="dl-item"><div class="dl-dot" style="background:#6c63ff"></div><span class="dl-label">Dolls</span><span class="dl-val">72</span><span class="dl-pct">29%</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#22c55e"></div><span class="dl-label">Cars</span><span class="dl-val">58</span><span class="dl-pct">23%</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#f59e0b"></div><span class="dl-label">Puzzles</span><span class="dl-val">45</span><span class="dl-pct">18%</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#3b82f6"></div><span class="dl-label">Stuffed</span><span class="dl-val">38</span><span class="dl-pct">15%</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#ec4899"></div><span class="dl-label">Other</span><span class="dl-val">35</span><span class="dl-pct">14%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Mid Row -->
+      <div class="mid-row">
+        <!-- Recent Activity -->
+        <div class="mini-panel">
+          <div class="card-head" style="margin-bottom:12px">
+            <h3>Recent Activity</h3>
+            <a href="#" style="font-size:.75rem;color:var(--accent)" onclick="nav(document.querySelector('[data-sec=orders]'));return false">View all →</a>
+          </div>
+          <div class="activity-item">
+            <div class="act-av" style="background:linear-gradient(135deg,#6c63ff,#ec4899)">AR</div>
+            <div class="act-text">
+              <div class="act-title">Barbie Doll Set × 2</div>
+              <div class="act-sub">Ali Raza · <span class="badge badge-green">Delivered</span></div>
+            </div>
+            <div class="act-time">2m ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-av" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">SK</div>
+            <div class="act-text">
+              <div class="act-title">RC Racing Car × 1</div>
+              <div class="act-sub">Sara Khan · <span class="badge badge-yellow">Processing</span></div>
+            </div>
+            <div class="act-time">18m ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-av" style="background:linear-gradient(135deg,#f97316,#f59e0b)">UA</div>
+            <div class="act-text">
+              <div class="act-title">Teddy Bear XL × 3</div>
+              <div class="act-sub">Usman Ahmed · <span class="badge badge-green">Delivered</span></div>
+            </div>
+            <div class="act-time">45m ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-av" style="background:linear-gradient(135deg,#22c55e,#06b6d4)">FM</div>
+            <div class="act-text">
+              <div class="act-title">Puzzle 1000 pcs × 1</div>
+              <div class="act-sub">Fatima Malik · <span class="badge badge-blue">Shipped</span></div>
+            </div>
+            <div class="act-time">1h ago</div>
+          </div>
+        </div>
+ 
+        <!-- Low Stock Alerts -->
+        <div class="mini-panel">
+          <div class="card-head" style="margin-bottom:12px">
+            <h3>⚠ Stock Alerts</h3>
+            <span style="font-size:.72rem;color:var(--muted)">5 items need attention</span>
+          </div>
+          <div class="alert-row danger">
+            <span class="alert-ic">🍳</span>
+            <div class="alert-info"><strong>Kitchen Play Set</strong><span>Playsets · 0 units</span></div>
+            <button class="restock-btn">Restock</button>
+          </div>
+          <div class="alert-row danger">
+            <span class="alert-ic">🎨</span>
+            <div class="alert-info"><strong>Art & Craft Kit</strong><span>Creative · 0 units</span></div>
+            <button class="restock-btn">Restock</button>
+          </div>
+          <div class="alert-row warn">
+            <span class="alert-ic">🐻</span>
+            <div class="alert-info"><strong>Teddy Bear XL</strong><span>Stuffed · 8 units</span></div>
+            <button class="restock-btn">Restock</button>
+          </div>
+          <div class="alert-row warn">
+            <span class="alert-ic">🍼</span>
+            <div class="alert-info"><strong>Baby Rattle Pack</strong><span>Infant · 5 units</span></div>
+            <button class="restock-btn">Restock</button>
+          </div>
+          <div class="alert-row warn">
+            <span class="alert-ic">🚗</span>
+            <div class="alert-info"><strong>Mini Toy Cars Set</strong><span>Cars · 6 units</span></div>
+            <button class="restock-btn">Restock</button>
+          </div>
+        </div>
+ 
+        <!-- Quick Stats -->
+        <div class="mini-panel" style="display:flex;flex-direction:column;gap:10px">
+          <div class="card-head" style="margin-bottom:4px"><h3>Quick Stats</h3></div>
+          <div class="qstat"><div class="qstat-label">Avg Order Value</div><div class="qstat-val">Rs 1,590</div><div class="qstat-sub">↑ Rs 120 vs last week</div></div>
+          <div class="qstat"><div class="qstat-label">Avg Rating</div><div class="qstat-val">4.8 ⭐</div><div class="qstat-sub">Based on 392 reviews</div></div>
+          <div class="qstat"><div class="qstat-label">Return Rate</div><div class="qstat-val">2.1%</div><div class="qstat-sub">↓ 0.4% vs last month</div></div>
+          <div class="qstat"><div class="qstat-label">Out of Stock</div><div class="qstat-val">2 items</div><div class="qstat-sub">Needs immediate action</div></div>
+        </div>
+      </div>
+ 
+      <!-- Inventory Table -->
+      <div class="table-card">
+        <div class="table-head">
+          <h3>📦 Stock Inventory</h3>
+          <div class="table-actions">
+            <div class="search-mini">
+              <span style="color:var(--muted);font-size:13px">🔍</span>
+              <input type="text" placeholder="Search products…" oninput="filterTable(this.value,'inv-tbody')"/>
+            </div>
+            <button class="btn-ghost" onclick="exportCSV()">⬇ Export</button>
+            <button class="btn-primary" onclick="openModal()">+ Add Product</button>
+          </div>
+        </div>
+        <table class="adv-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Product</th><th>Category</th>
+              <th>Stock Level</th><th>Price</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inv-tbody">
+            <tr>
+              <td style="color:var(--muted)">#001</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(108,99,255,.12)">🎀</div><div><div class="prod-name">Barbie Doll Set</div><div class="prod-cat">SKU-1021</div></div></div></td>
+              <td><span class="badge badge-purple">Dolls</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:75%;background:var(--green)"></div></div><span class="stock-bar-label">45</span></div></td>
+              <td style="font-weight:600">Rs 2,400</td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#002</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(34,197,94,.1)">🚗</div><div><div class="prod-name">RC Racing Car</div><div class="prod-cat">SKU-1022</div></div></div></td>
+              <td><span class="badge badge-green">Cars</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:50%;background:var(--green)"></div></div><span class="stock-bar-label">30</span></div></td>
+              <td style="font-weight:600">Rs 3,100</td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#003</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(245,158,11,.1)">🐻</div><div><div class="prod-name">Teddy Bear XL</div><div class="prod-cat">SKU-1023</div></div></div></td>
+              <td><span class="badge badge-yellow">Stuffed</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:13%;background:var(--yellow)"></div></div><span class="stock-bar-label">8</span></div></td>
+              <td style="font-weight:600">Rs 1,800</td>
+              <td><span class="badge badge-yellow">Low Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#004</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(59,130,246,.1)">🧩</div><div><div class="prod-name">Puzzle 1000 pcs</div><div class="prod-cat">SKU-1024</div></div></div></td>
+              <td><span class="badge badge-blue">Puzzles</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:100%;background:var(--green)"></div></div><span class="stock-bar-label">60</span></div></td>
+              <td style="font-weight:600">Rs 950</td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#005</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(239,68,68,.08)">🍳</div><div><div class="prod-name">Kitchen Play Set</div><div class="prod-cat">SKU-1025</div></div></div></td>
+              <td><span class="badge badge-cyan">Playsets</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:0%;background:var(--red)"></div></div><span class="stock-bar-label">0</span></div></td>
+              <td style="font-weight:600">Rs 2,200</td>
+              <td><span class="badge badge-red">Out of Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#006</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(6,182,212,.1)">🧱</div><div><div class="prod-name">LEGO City Set</div><div class="prod-cat">SKU-1026</div></div></div></td>
+              <td><span class="badge badge-cyan">Building</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:37%;background:var(--green)"></div></div><span class="stock-bar-label">22</span></div></td>
+              <td style="font-weight:600">Rs 4,500</td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#007</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(245,158,11,.1)">🍼</div><div><div class="prod-name">Baby Rattle Pack</div><div class="prod-cat">SKU-1027</div></div></div></td>
+              <td><span class="badge badge-yellow">Infant</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:8%;background:var(--yellow)"></div></div><span class="stock-bar-label">5</span></div></td>
+              <td style="font-weight:600">Rs 650</td>
+              <td><span class="badge badge-yellow">Low Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">#008</td>
+              <td><div class="prod-cell"><div class="prod-av" style="background:rgba(108,99,255,.1)">🦕</div><div><div class="prod-name">Dinosaur Figure Set</div><div class="prod-cat">SKU-1028</div></div></div></td>
+              <td><span class="badge badge-purple">Action Toys</span></td>
+              <td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:67%;background:var(--green)"></div></div><span class="stock-bar-label">40</span></div></td>
+              <td style="font-weight:600">Rs 1,200</td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+    <!-- ══ ANALYTICS ══ -->
+    <div class="dash-section" id="sec-analytics">
+      <div class="analytics-kpi-row">
+        <div class="kpi-card kpi-purple" style="padding:16px">
+          <div class="kpi-top"><div class="kpi-icon" style="width:36px;height:36px">📊</div><span class="kpi-trend trend-up">▲ 18%</span></div>
+          <div class="kpi-val" style="font-size:1.4rem">Rs 84.2K</div>
+          <div class="kpi-label">Total Revenue</div>
+        </div>
+        <div class="kpi-card kpi-green" style="padding:16px">
+          <div class="kpi-top"><div class="kpi-icon" style="width:36px;height:36px">📦</div><span class="kpi-trend trend-up">▲ 12%</span></div>
+          <div class="kpi-val" style="font-size:1.4rem">1,847</div>
+          <div class="kpi-label">Units Sold</div>
+        </div>
+        <div class="kpi-card kpi-orange" style="padding:16px">
+          <div class="kpi-top"><div class="kpi-icon" style="width:36px;height:36px">🔄</div><span class="kpi-trend trend-down">▼ 0.4%</span></div>
+          <div class="kpi-val" style="font-size:1.4rem">2.1%</div>
+          <div class="kpi-label">Return Rate</div>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <div class="card-head"><h3>Monthly Sales Trend</h3></div>
+          <div style="height:240px"><canvas id="salesTrendChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-head"><h3>Orders by Status</h3></div>
+          <div style="height:240px"><canvas id="statusChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-head"><h3>Category Performance</h3></div>
+          <div style="height:240px"><canvas id="catChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-head"><h3>Weekly Traffic</h3></div>
+          <div style="height:240px"><canvas id="trafficChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ══ ORDERS ══ -->
+    <div class="dash-section" id="sec-orders">
+      <div class="table-card">
+        <div class="table-head">
+          <h3>🛍️ All Orders</h3>
+          <div class="table-actions">
+            <div class="search-mini">
+              <span style="color:var(--muted);font-size:13px">🔍</span>
+              <input type="text" placeholder="Search orders…" oninput="filterTable(this.value,'ord-tbody')"/>
+            </div>
+            <button class="btn-ghost">Filter</button>
+          </div>
+        </div>
+        <table class="adv-table">
+          <thead>
+            <tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+          </thead>
+          <tbody id="ord-tbody">
+            <tr><td style="font-weight:700;color:var(--accent)">#1021</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#6c63ff,#ec4899)">AR</div><div><div class="order-name">Ali Raza</div><div class="order-id">ali@email.com</div></div></div></td><td>Barbie Doll Set</td><td style="font-weight:700">Rs 2,400</td><td style="color:var(--muted)">May 10, 2026</td><td><span class="badge badge-green">Delivered</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1022</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">SK</div><div><div class="order-name">Sara Khan</div><div class="order-id">sara@email.com</div></div></div></td><td>RC Racing Car</td><td style="font-weight:700">Rs 3,100</td><td style="color:var(--muted)">May 10, 2026</td><td><span class="badge badge-yellow">Processing</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1023</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#f97316,#f59e0b)">UA</div><div><div class="order-name">Usman Ahmed</div><div class="order-id">usman@email.com</div></div></div></td><td>Teddy Bear XL</td><td style="font-weight:700">Rs 1,800</td><td style="color:var(--muted)">May 9, 2026</td><td><span class="badge badge-green">Delivered</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1024</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#22c55e,#06b6d4)">FM</div><div><div class="order-name">Fatima Malik</div><div class="order-id">fatima@email.com</div></div></div></td><td>Puzzle 1000 pcs</td><td style="font-weight:700">Rs 950</td><td style="color:var(--muted)">May 9, 2026</td><td><span class="badge badge-blue">Shipped</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1025</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#ec4899,#6c63ff)">HA</div><div><div class="order-name">Hassan Ali</div><div class="order-id">hassan@email.com</div></div></div></td><td>Kitchen Play Set</td><td style="font-weight:700">Rs 2,200</td><td style="color:var(--muted)">May 8, 2026</td><td><span class="badge badge-yellow">Processing</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1026</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#3b82f6,#22c55e)">ZA</div><div><div class="order-name">Zara Ahmed</div><div class="order-id">zara@email.com</div></div></div></td><td>LEGO City Set</td><td style="font-weight:700">Rs 4,500</td><td style="color:var(--muted)">May 8, 2026</td><td><span class="badge badge-green">Delivered</span></td></tr>
+            <tr><td style="font-weight:700;color:var(--accent)">#1027</td><td><div class="order-cell"><div class="order-av" style="background:linear-gradient(135deg,#f59e0b,#f97316)">BH</div><div><div class="order-name">Bilal Hassan</div><div class="order-id">bilal@email.com</div></div></div></td><td>Dinosaur Figure Set</td><td style="font-weight:700">Rs 1,200</td><td style="color:var(--muted)">May 7, 2026</td><td><span class="badge badge-red">Cancelled</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+    <!-- ══ STOCK ══ -->
+    <div class="dash-section" id="sec-stock">
+      <div class="table-card">
+        <div class="table-head">
+          <h3>📦 Stock Manager</h3>
+          <div class="table-actions">
+            <div class="search-mini">
+              <span style="color:var(--muted);font-size:13px">🔍</span>
+              <input type="text" placeholder="Search products…" oninput="filterTable(this.value,'stk-tbody')"/>
+            </div>
+            <button class="btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+            <button class="btn-primary" onclick="openModal()">+ Add Product</button>
+          </div>
+        </div>
+        <table class="adv-table">
+          <thead><tr><th>#</th><th>Product</th><th>Category</th><th>Stock Level</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="stk-tbody">
+            <tr><td style="color:var(--muted)">#001</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(108,99,255,.12)">🎀</div><div><div class="prod-name">Barbie Doll Set</div><div class="prod-cat">SKU-1021</div></div></div></td><td><span class="badge badge-purple">Dolls</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:75%;background:var(--green)"></div></div><span class="stock-bar-label">45</span></div></td><td style="font-weight:600">Rs 2,400</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#002</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(34,197,94,.1)">🚗</div><div><div class="prod-name">RC Racing Car</div><div class="prod-cat">SKU-1022</div></div></div></td><td><span class="badge badge-green">Cars</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:50%;background:var(--green)"></div></div><span class="stock-bar-label">30</span></div></td><td style="font-weight:600">Rs 3,100</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#003</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(245,158,11,.1)">🐻</div><div><div class="prod-name">Teddy Bear XL</div><div class="prod-cat">SKU-1023</div></div></div></td><td><span class="badge badge-yellow">Stuffed</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:13%;background:var(--yellow)"></div></div><span class="stock-bar-label">8</span></div></td><td style="font-weight:600">Rs 1,800</td><td><span class="badge badge-yellow">Low Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#004</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(59,130,246,.1)">🧩</div><div><div class="prod-name">Puzzle 1000 pcs</div><div class="prod-cat">SKU-1024</div></div></div></td><td><span class="badge badge-blue">Puzzles</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:100%;background:var(--green)"></div></div><span class="stock-bar-label">60</span></div></td><td style="font-weight:600">Rs 950</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#005</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(239,68,68,.08)">🍳</div><div><div class="prod-name">Kitchen Play Set</div><div class="prod-cat">SKU-1025</div></div></div></td><td><span class="badge badge-cyan">Playsets</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:0%;background:var(--red)"></div></div><span class="stock-bar-label">0</span></div></td><td style="font-weight:600">Rs 2,200</td><td><span class="badge badge-red">Out of Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#006</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(6,182,212,.1)">🧱</div><div><div class="prod-name">LEGO City Set</div><div class="prod-cat">SKU-1026</div></div></div></td><td><span class="badge badge-cyan">Building</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:37%;background:var(--green)"></div></div><span class="stock-bar-label">22</span></div></td><td style="font-weight:600">Rs 4,500</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#007</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(245,158,11,.1)">🍼</div><div><div class="prod-name">Baby Rattle Pack</div><div class="prod-cat">SKU-1027</div></div></div></td><td><span class="badge badge-yellow">Infant</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:8%;background:var(--yellow)"></div></div><span class="stock-bar-label">5</span></div></td><td style="font-weight:600">Rs 650</td><td><span class="badge badge-yellow">Low Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#008</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(108,99,255,.1)">🦕</div><div><div class="prod-name">Dinosaur Figure Set</div><div class="prod-cat">SKU-1028</div></div></div></td><td><span class="badge badge-purple">Action Toys</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:67%;background:var(--green)"></div></div><span class="stock-bar-label">40</span></div></td><td style="font-weight:600">Rs 1,200</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#009</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(59,130,246,.1)">💦</div><div><div class="prod-name">Water Gun XL</div><div class="prod-cat">SKU-1029</div></div></div></td><td><span class="badge badge-blue">Outdoor</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:92%;background:var(--green)"></div></div><span class="stock-bar-label">55</span></div></td><td style="font-weight:600">Rs 800</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#010</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(239,68,68,.08)">🎨</div><div><div class="prod-name">Art & Craft Kit</div><div class="prod-cat">SKU-1030</div></div></div></td><td><span class="badge badge-purple">Creative</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:0%;background:var(--red)"></div></div><span class="stock-bar-label">0</span></div></td><td style="font-weight:600">Rs 2,800</td><td><span class="badge badge-red">Out of Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+            <tr><td style="color:var(--muted)">#011</td><td><div class="prod-cell"><div class="prod-av" style="background:rgba(34,197,94,.1)">🎲</div><div><div class="prod-name">Board Game Classic</div><div class="prod-cat">SKU-1031</div></div></div></td><td><span class="badge badge-green">Games</span></td><td><div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill" style="width:30%;background:var(--green)"></div></div><span class="stock-bar-label">18</span></div></td><td style="font-weight:600">Rs 1,900</td><td><span class="badge badge-green">In Stock</span></td><td><div class="row-actions"><button class="act-btn act-edit">Edit</button><button class="act-btn act-del">Delete</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+ 
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3>Add New Product</h3>
+      <button class="modal-close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-row"><label>Product Name</label><input type="text" placeholder="e.g. Barbie Doll Deluxe"/></div>
+    <div class="form-2col">
+      <div class="form-row">
+        <label>Category</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Dolls</option><option>Cars</option><option>Puzzles</option>
+          <option>Stuffed</option><option>Building</option><option>Playsets</option>
+          <option>Infant</option><option>Action Toys</option><option>Outdoor</option>
+          <option>Creative</option><option>Games</option>
+        </select>
+      </div>
+      <div class="form-row"><label>SKU</label><input type="text" placeholder="e.g. SKU-1032"/></div>
+    </div>
+    <div class="form-2col">
+      <div class="form-row"><label>Quantity</label><input type="number" placeholder="e.g. 30"/></div>
+      <div class="form-row"><label>Price (Rs.)</label><input type="number" placeholder="e.g. 1500"/></div>
+    </div>
+    <div class="form-row"><label>Description (optional)</label><input type="text" placeholder="Short product description…"/></div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit">Add to Inventory</button>
+    </div>
   </div>
 </div>
-
-<footer>
-  <div class="footer-container">
-    <div><h1>🧸 ToyStore</h1><p>Pakistan's favourite toy shop online.</p></div>
-    <div><h2>Links</h2><a href="products.html">Shop</a><a href="cart.html">Cart</a><a href="contact.html">Contact</a></div>
-    <div><h2>Categories</h2><a href="products.html?cat=dolls">Dolls</a><a href="products.html?cat=cars">Cars</a><a href="products.html?cat=puzzles">Puzzles</a></div>
-  </div>
-  <p style="text-align:center;margin-top:16px;">© 2025 ToyStore. All rights reserved.</p>
-</footer>
-
-<script src="../jsFile/jsFunctions.js"></script>
+ 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  drawBarChart("salesChart", ["Dolls","Cars","Teddy","Puzzles","Kitchen"], [42,31,27,18,22], "Monthly Sales by Category");
-  drawBarChart("stockChart", ["Dolls","Cars","Teddy","Puzzles","Kitchen"], [80,65,50,90,45], "Current Stock Levels");
+// ── THEME TOGGLE ──
+let isDark = false;
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-toggle').title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+  // Redraw charts with new theme
+  setTimeout(() => { drawRevenue(); drawDonut(); }, 50);
+}
+ 
+// ── NAV ──
+const titles = {overview:'Overview',analytics:'Analytics',orders:'Orders',stock:'Stock Manager'};
+const subs   = {overview:"Store summary & quick actions",analytics:"Sales performance & trends",orders:"All customer orders",stock:"Full product inventory"};
+ 
+function nav(el) {
+  if (!el) return;
+  const sec = el.dataset.sec;
+  if (!sec) return;
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + sec).classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[sec] || sec;
+  document.getElementById('topbar-sub').textContent = subs[sec] || '';
+  if (sec === 'analytics') setTimeout(drawAnalyticsCharts, 80);
+}
+ 
+// ── SIDEBAR COLLAPSE ──
+let collapsed = false;
+function toggleSidebar() {
+  collapsed = !collapsed;
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('collapsed', collapsed);
+  sb.querySelector('.sidebar-collapse').textContent = collapsed ? '▶' : '◀';
+}
+ 
+// ── MODAL ──
+function openModal()  { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+ 
+// ── FILTER ──
+function filterTable(q, id) {
+  q = q.toLowerCase();
+  document.querySelectorAll('#' + id + ' tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+function globalSearch(q) { q = q.toLowerCase(); if (!q) return; }
+ 
+// ── CHIP ──
+function switchChip(el) {
+  el.closest('.card-head-right').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+ 
+// ── EXPORT ──
+function exportCSV() {
+  const rows = [['ID','Product','Category','QTY','Price','Status']];
+  document.querySelectorAll('#stk-tbody tr').forEach(r => {
+    const cells = [...r.querySelectorAll('td')].slice(0,6).map(td => td.textContent.trim());
+    rows.push(cells);
+  });
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(rows.map(r => r.join(',')).join('\n'));
+  a.download = 'toystore_stock.csv'; a.click();
+}
+ 
+// ── CHARTS ──
+function getThemeColor(varName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+ 
+function hex2rgba(hex, a) {
+  if (hex.startsWith('rgb')) return hex;
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+ 
+function drawSparkline(id, data, color) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 200, H = 36;
+  canvas.width = W * 2; canvas.height = H * 2;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.scale(2,2);
+  const max = Math.max(...data), min = Math.min(...data);
+  const pts = data.map((v,i) => ({
+    x: i * (W / (data.length-1)),
+    y: H - 4 - ((v-min)/(max-min||1)) * (H-8)
+  }));
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, hex2rgba(color, 0.25));
+  grad.addColorStop(1, hex2rgba(color, 0));
+  ctx.beginPath();
+  pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+}
+ 
+function drawRevenue() {
+  const c = document.getElementById('revenueChart');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const W = c.parentElement.offsetWidth, H = c.parentElement.offsetHeight;
+  c.width = W*2; c.height = H*2; c.style.width=W+'px'; c.style.height=H+'px';
+  ctx.scale(2,2);
+  const data = [42,58,51,70,64,80,72,88,76,94,84,100];
+  const labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const pad = {l:40,r:20,t:15,b:30};
+  const cW = W-pad.l-pad.r, cH = H-pad.t-pad.b;
+  const max = 110, step = cW/(data.length-1);
+  const mutedColor = 'rgba(122,134,154,.7)';
+  const gridColor = isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)';
+ 
+  ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) {
+    const y = pad.t + cH - i*(cH/5);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+cW,y); ctx.stroke();
+    ctx.fillStyle = mutedColor; ctx.font='10px Inter';
+    ctx.textAlign='right'; ctx.fillText(Math.round(i*20)+'K', pad.l-6, y+4);
+  }
+  labels.forEach((l,i) => {
+    ctx.fillStyle=mutedColor; ctx.font='10px Inter'; ctx.textAlign='center';
+    ctx.fillText(l, pad.l + i*step, H-pad.b+14);
+  });
+ 
+  const pts = data.map((v,i) => ({x:pad.l+i*step, y:pad.t+cH-(v/max)*cH}));
+  const grad = ctx.createLinearGradient(0,pad.t,0,pad.t+cH);
+  grad.addColorStop(0,'rgba(108,99,255,.25)'); grad.addColorStop(1,'rgba(108,99,255,0)');
+  ctx.beginPath();
+  pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x, pad.t+cH); ctx.lineTo(pts[0].x, pad.t+cH); ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+ 
+  ctx.beginPath();
+  pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle='#6c63ff'; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+ 
+  const bg2 = isDark ? '#161b27' : '#ffffff';
+  pts.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle='#6c63ff'; ctx.fill();
+    ctx.strokeStyle=bg2; ctx.lineWidth=1.5; ctx.stroke();
+  });
+}
+ 
+function drawDonut() {
+  const c = document.getElementById('donutChart');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const S = 160; c.width=S*2; c.height=S*2; c.style.width=S+'px'; c.style.height=S+'px';
+  ctx.scale(2,2);
+  const vals = [72,58,45,38,35], colors=['#6c63ff','#22c55e','#f59e0b','#3b82f6','#ec4899'];
+  const total = vals.reduce((a,b)=>a+b,0);
+  let start = -Math.PI/2;
+  vals.forEach((v,i) => {
+    const sweep = (v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(S/2,S/2);
+    ctx.arc(S/2,S/2,65,start,start+sweep);
+    ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
+    start += sweep;
+  });
+  const bg2 = isDark ? '#161b27' : '#ffffff';
+  ctx.beginPath(); ctx.arc(S/2,S/2,45,0,Math.PI*2);
+  ctx.fillStyle=bg2; ctx.fill();
+}
+ 
+function drawBar(id, labels, datasets) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const W = c.parentElement.offsetWidth, H = c.parentElement.offsetHeight;
+  c.width=W*2; c.height=H*2; c.style.width=W+'px'; c.style.height=H+'px';
+  ctx.scale(2,2);
+  const pad={l:40,r:10,t:15,b:30};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  const allVals = datasets.flatMap(d=>d.data);
+  const max = Math.max(...allVals)*1.15;
+  const n = labels.length, bw = (cW/n)*0.55, gap=(cW/n)*0.45;
+  const gridColor = isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)';
+  const mutedColor = 'rgba(122,134,154,.7)';
+ 
+  ctx.strokeStyle=gridColor; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+cH-i*(cH/4);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
+    ctx.fillStyle=mutedColor;ctx.font='9px Inter';ctx.textAlign='right';
+    ctx.fillText(Math.round(i*(max/4)),pad.l-5,y+4);
+  }
+  labels.forEach((l,i)=>{
+    const x=pad.l+(i+.5)*(cW/n);
+    ctx.fillStyle=mutedColor;ctx.font='9px Inter';ctx.textAlign='center';
+    ctx.fillText(l,x,H-pad.b+14);
+  });
+  datasets.forEach((ds,di)=>{
+    ds.data.forEach((v,i)=>{
+      const x=pad.l+i*(cW/n)+gap/2+(di*(bw/datasets.length));
+      const bwi=bw/datasets.length;
+      const barH=(v/max)*cH;
+      const y=pad.t+cH-barH;
+      ctx.fillStyle=ds.color;
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(x,y,bwi,barH,3); else ctx.rect(x,y,bwi,barH);
+      ctx.fill();
+    });
+  });
+}
+ 
+function drawAnalyticsCharts() {
+  const months=['Jan','Feb','Mar','Apr','May','Jun'];
+  drawBar('salesTrendChart',months,[{data:[32,45,38,60,52,70],color:'#6c63ff'},{data:[20,30,25,40,35,55],color:'#22c55e'}]);
+  drawBar('statusChart',['Delivered','Shipped','Processing','Cancelled'],[{data:[42,18,25,8],color:'#22c55e'}]);
+  drawBar('catChart',['Dolls','Cars','Puzzles','Stuffed','Other'],[{data:[42,31,27,18,22],color:'#6c63ff'}]);
+  drawBar('trafficChart',['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],[{data:[120,180,150,200,170,240,190],color:'#06b6d4'}]);
+}
+ 
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    drawSparkline('sp1',[20,35,28,45,38,52,48,60],'#6c63ff');
+    drawSparkline('sp2',[30,45,38,60,42,55,50,65],'#22c55e');
+    drawSparkline('sp3',[150,200,180,220,195,240,215,260],'#f97316');
+    drawSparkline('sp4',[60,70,65,80,72,75,68,84],'#3b82f6');
+    drawRevenue();
+    drawDonut();
+  }, 100);
 });
 </script>
 </body>
